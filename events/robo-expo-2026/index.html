@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Robo Expo 2026 — the Memory Wall · Clasow</title>
+<meta name="description" content="Clasow's first event. 116 visitors signed our Memory Wall at Robo Expo 2026, 3 October 2026.">
+<meta name="theme-color" content="#005bbf">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Clasow">
+<meta property="og:title" content="Robo Expo 2026 — the Memory Wall">
+<meta property="og:description" content="116 signatures. One wall.">
+<meta property="og:url" content="https://clasow.com/events/robo-expo-2026/">
+<meta property="og:image" content="https://clasow.com/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://clasow.com/events/robo-expo-2026/">
+<link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon-192.png">
+<link rel="apple-touch-icon" href="../../assets/icon-192.png">
+<link rel="preload" href="../../assets/nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="wall.json" as="fetch" crossorigin>
+<script>document.documentElement.classList.add("js");</script>
+<style>
+  /* Clasow's tokens, as on the landing page. The page is a memory of one day:
+     a reel that signs the day again at random, then the whole wall, a random card re-signing now and then. */
+  @font-face {
+    font-family: "Nunito"; font-style: normal; font-weight: 400 800; font-display: swap;
+    src: url("../../assets/nunito-latin.woff2") format("woff2");
+  }
+  :root {
+    color-scheme: light;
+    --surface: #f9f9ff; --lowest: #ffffff; --low: #f2f3fd; --container: #ecedf7;
+    --on-surface: #191c23; --on-surface-variant: #414754;
+    --primary: #005bbf; --on-primary: #ffffff; --primary-pressed: #004493;
+    --primary-fixed: #d8e2ff; --on-primary-fixed: #001a41;
+    --outline-variant: #c1c6d6;
+    --xxs: 2px; --xs: 4px; --sm: 8px; --md: 16px; --lg: 24px; --xl: 32px; --xxl: 48px; --xxxl: 64px;
+    --radius: 12px; --radius-sm: 8px;
+    --column: 560px; --wide: 1120px; --touch: 48px;
+    --arrive: 360ms cubic-bezier(.05, .7, .1, 1);
+    --shadow-1: 0 1px 2px rgba(25, 28, 35, .08), 0 1px 3px rgba(25, 28, 35, .06);
+    --shadow-2: 0 4px 12px rgba(25, 28, 35, .10), 0 1px 3px rgba(25, 28, 35, .06);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         font-size: 16px; line-height: 24px; color: var(--on-surface); background: var(--surface);
+         -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: var(--column); margin: 0 auto; padding: 0 var(--md); }
+  p, h1, h2, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  a { color: var(--primary); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--on-primary-fixed); outline-offset: 2px; }
+
+  .top { padding-top: var(--lg); background: var(--primary-fixed); }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--md); }
+  .brand { display: flex; align-items: center; gap: var(--sm); font-size: 20px; line-height: 28px; font-weight: 800;
+           color: var(--on-surface); text-decoration: none; }
+  .brand img { display: block; width: var(--xl); height: var(--xl); border-radius: var(--radius-sm); box-shadow: var(--shadow-1); }
+  .back, .links a { display: inline-flex; align-items: center; min-height: var(--touch); color: var(--on-surface-variant);
+                    font-size: 15px; line-height: 20px; font-weight: 700; text-decoration: none; }
+  .back:hover, .links a:hover { color: var(--primary); }
+
+  .hero { padding: var(--xl) 0 var(--xxl); background: linear-gradient(180deg, var(--primary-fixed) 0%, var(--surface) 100%); }
+  .label { display: inline-flex; align-items: center; gap: var(--sm); padding: var(--xs) var(--md); border-radius: 999px;
+           background: var(--lowest); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; }
+  .label::before { content: ""; width: var(--sm); height: var(--sm); border-radius: 50%; background: var(--primary); }
+  h1 { margin-top: var(--md); font-size: 24px; line-height: 32px; font-weight: 800; }
+  .lead { margin-top: var(--xs); color: var(--on-surface-variant); }
+
+  /* The reel: the day replayed, one signature at a time, a pen tip riding the ink */
+  .reel { position: relative; margin-top: var(--lg); aspect-ratio: 3 / 2; border-radius: var(--radius);
+          background: var(--lowest); box-shadow: var(--shadow-2); }
+  .reel svg:not(.pen) { position: absolute; inset: 8% 10% 14%; width: 80%; height: 78%; transition: opacity 400ms ease; }
+  .reel svg.out { opacity: 0; }
+  /* The pen: its tip is kept on the point being written, so the card is being signed in front of you */
+  .pen { position: absolute; left: 0; top: 0; width: 64px; height: 64px; pointer-events: none; opacity: 0;
+         transition: opacity 200ms ease; will-change: transform; filter: drop-shadow(0 6px 6px rgba(25, 28, 35, .18)); }
+  .pen.on { opacity: 1; }
+  .count { position: absolute; left: var(--md); bottom: var(--sm); font-size: 12px; line-height: 16px; font-weight: 500;
+           letter-spacing: .5px; color: var(--on-surface-variant); font-variant-numeric: tabular-nums; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sm); margin-top: var(--md); }
+  .stats li { padding: var(--md); border-radius: var(--radius); background: var(--lowest); box-shadow: var(--shadow-1); }
+  .stats b { display: block; font-size: 24px; line-height: 32px; font-weight: 800; color: var(--primary); font-variant-numeric: tabular-nums; }
+  .stats span { display: block; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--on-surface-variant); }
+
+  section { padding-top: var(--xxl); }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: var(--md); margin-bottom: var(--md); }
+  h2 { font-size: 20px; line-height: 28px; font-weight: 800; }
+
+  .wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sm); padding: var(--sm);
+          border-radius: var(--radius); background: var(--low); }
+  .wall li { aspect-ratio: 3 / 2; border-radius: var(--radius-sm); background: var(--lowest); box-shadow: var(--shadow-1); }
+  .wall svg { display: block; width: 100%; height: 100%; }
+  /* With a mouse: a card lifts and signs itself again under the cursor */
+  @media (hover: hover) {
+    .wall li { transition: box-shadow 200ms cubic-bezier(.2, 0, 0, 1), transform 200ms cubic-bezier(.2, 0, 0, 1); }
+    .wall li.in:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+  }
+  .js .wall li { opacity: 0; }
+  .js .wall li.in { opacity: 1; transition: opacity var(--arrive), box-shadow 200ms cubic-bezier(.2, 0, 0, 1), transform 200ms cubic-bezier(.2, 0, 0, 1); }
+
+  .cta { display: flex; align-items: center; justify-content: center; min-height: 52px; margin-top: var(--xxl);
+         padding: var(--sm) var(--lg); border-radius: var(--radius); background: var(--primary); color: var(--on-primary);
+         box-shadow: var(--shadow-1); font-size: 15px; font-weight: 700; text-decoration: none; }
+  .cta:hover { box-shadow: var(--shadow-2); }
+  .cta:active { background: var(--primary-pressed); }
+
+  footer { display: flex; flex-direction: column; align-items: center; gap: var(--sm);
+           margin-top: var(--xxxl); padding: var(--lg) 0 var(--xxl); border-top: 1px solid var(--outline-variant); }
+  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--lg); }
+
+  .js .reveal { opacity: 0; }
+  .js .reveal.in { opacity: 1; transition: opacity var(--arrive); }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal, .js .reveal.in, .js .wall li, .js .wall li.in { opacity: 1; transition: none; }
+    .reel svg:not(.pen) { transition: none; }
+  }
+  @media (min-width: 600px) { .wall { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 900px) {
+    .wrap { max-width: var(--wide); padding: 0 var(--lg); }
+    .hero { padding: var(--xxl) 0 var(--xxxl); }
+    .hero .wrap { display: grid; grid-template-columns: 5fr 6fr; gap: var(--xxl); align-items: center; }
+    h1 { font-size: 24px; }
+    .reel { margin-top: 0; }
+    .stats { margin-top: var(--xl); }
+    .wall { grid-template-columns: repeat(6, 1fr); gap: var(--md); padding: var(--md); }
+    .cta { display: flex; width: max-content; margin-left: auto; margin-right: auto; padding: var(--sm) var(--xl); }
+    footer { flex-direction: row; justify-content: space-between; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img src="../../assets/icon-96.png" width="32" height="32" alt="">Clasow</a>
+    <a class="back" href="../">All events</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <p class="label reveal">Our first event · 3 Oct 2026</p>
+        <h1 class="reveal">Robo Expo 2026</h1>
+        <p class="lead reveal">One day. One wall. Every signature, written again.</p>
+        <ul class="stats reveal">
+          <li><b data-to="116">116</b><span>signatures</span></li>
+          <li><b data-to="67">67</b><span>groups</span></li>
+          <li><b data-to="9.8">9.8</b><span>energy / 10</span></li>
+        </ul>
+      </div>
+      <div class="reel reveal" id="reel" role="img" aria-label="The day replayed: each visitor's signature written again, one after another.">
+        <svg class="pen" id="pen" viewBox="0 0 64 64" aria-hidden="true">
+          <path d="M13.9 50.1L54 10" stroke="#191c23" stroke-width="8" stroke-linecap="round"/>
+          <path d="M46 18L51 13" stroke="#005bbf" stroke-width="8" stroke-linecap="round"/>
+          <path d="M4 60l7.1-12.7 5.6 5.6z" fill="#414754"/>
+          <circle cx="4.6" cy="59.4" r="1.6" fill="#191c23"/>
+        </svg>
+        <p class="count" id="count" aria-hidden="true"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section aria-labelledby="wall-h">
+      <div class="head reveal">
+        <h2 id="wall-h">The wall</h2>
+      </div>
+      <ul class="wall" id="wall-grid" role="img" aria-label="116 handwritten signatures left by visitors at the Clasow stall, Robo Expo 2026."></ul>
+    </section>
+
+    <!-- Photos of the day go here when we have them. -->
+
+    <a class="cta reveal" href="../../">Discover Clasow</a>
+
+    <footer>
+      <a class="brand" href="../../"><img src="../../assets/icon-96.png" width="32" height="32" alt="">Clasow</a>
+      <nav class="links" aria-label="More">
+        <a href="../">Events</a>
+        <a href="../../privacy/">Privacy Policy</a>
+      </nav>
+    </footer>
+  </div>
+</main>
+
+<script src="../../assets/wall.js"></script>
+<script>
+(function () {
+  var io = "IntersectionObserver" in window, W = ClasowWall;
+  if (!io) document.documentElement.classList.remove("js");
+
+  // Blocks fade in once. The numbers count up the first time they are seen.
+  function countUp(b) {
+    var to = parseFloat(b.getAttribute("data-to")), dec = String(to).indexOf(".") > -1 ? 1 : 0, t0 = null;
+    function f(now) {
+      if (t0 === null) t0 = now;
+      var p = Math.min((now - t0) / 1400, 1), e = 1 - Math.pow(1 - p, 3);
+      b.textContent = (to * e).toFixed(dec);
+      if (p < 1) requestAnimationFrame(f);
+    }
+    b.textContent = (0).toFixed(dec);
+    requestAnimationFrame(f);
+  }
+  if (io) {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add("in");
+        e.target.querySelectorAll && e.target.querySelectorAll("[data-to]").forEach(countUp);
+        seen.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".reveal").forEach(function (el) { seen.observe(el); });
+  }
+
+  W.load("wall.json").then(function (data) {
+    var wall = data.wall, n = wall.length;
+
+    // The reel: the day met at random, one signature at a time, a pen signing it on the card.
+    var reel = document.getElementById("reel"), count = document.getElementById("count"), pen = document.getElementById("pen");
+    var order = W.shuffled(n), i = 0, reelOn = true, cur = null;
+    if (io) new IntersectionObserver(function (e) { reelOn = e[0].isIntersecting; }).observe(reel);
+    function penAt(svg) {
+      return function (head) {
+        if (!head) { pen.classList.remove("on"); return; }
+        var m = svg.getScreenCTM(), r = reel.getBoundingClientRect();
+        if (!m) return;
+        var x = m.a * head.x + m.c * head.y + m.e - r.left, y = m.b * head.x + m.d * head.y + m.f - r.top;
+        pen.style.transform = "translate(" + (x - 4.6).toFixed(1) + "px," + (y - 59.4).toFixed(1) + "px)";
+        pen.classList.add("on");
+      };
+    }
+    function nextSig() {
+      if (!reelOn || document.hidden) return setTimeout(nextSig, 500);
+      if (i === n) { order = W.shuffled(n); i = 0; }
+      var k = order[i++], svg = W.tile(wall[k]), old = cur;
+      count.textContent = "No. " + (k + 1) + " of " + n;
+      reel.insertBefore(svg, pen);
+      cur = svg;
+      if (old) { old.classList.add("out"); setTimeout(function () { old.remove(); }, 420); }
+      W.write(svg, Math.min(Math.max(svg._took * 0.55, 1600), 3000), { onHead: penAt(svg) })
+       .then(function () { setTimeout(nextSig, 1200); });
+    }
+    nextSig();
+
+    // The wall: every signature is on it, already signed. Then, now one card and now another,
+    // at random, a signature is written again, so the wall is never still and never all at once.
+    var grid = document.getElementById("wall-grid");
+    var tiles = wall.map(function (sig) {
+      var li = document.createElement("li");
+      li.appendChild(W.tile(sig));
+      grid.appendChild(li);
+      return li;
+    });
+    if (io) {
+      var fade = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add("in");
+          fade.unobserve(e.target);
+        });
+      }, { rootMargin: "0px 0px -5% 0px" });
+      tiles.forEach(function (li) { fade.observe(li); });
+    } else tiles.forEach(function (li) { li.classList.add("in"); });
+    if (io) {
+      var visible = [], busy = 0;
+      var watch = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var at = visible.indexOf(e.target);
+          if (e.isIntersecting && at < 0) visible.push(e.target);
+          if (!e.isIntersecting && at > -1) visible.splice(at, 1);
+        });
+      });
+      tiles.forEach(function (li) { watch.observe(li); });
+      setInterval(function () {
+        if (document.hidden || busy >= 2 || !visible.length) return;
+        var li = visible[Math.floor(Math.random() * visible.length)];
+        if (li._busy || !li.classList.contains("in")) return;
+        li._busy = true; busy++;
+        W.resign(li.firstChild, null, { nib: true }).then(function () { li._busy = false; busy--; });
+      }, 1100);
+    }
+    tiles.forEach(function (li) {
+      li.addEventListener("mouseenter", function () {
+        if (li._busy || !li.classList.contains("in")) return;
+        li._busy = true;
+        W.resign(li.firstChild, 1400, { nib: true }).then(function () { li._busy = false; });
+      });
+    });
+  }).catch(function () {});
+})();
+</script>
+
+</body>
+</html>

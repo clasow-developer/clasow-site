@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Events · Clasow</title>
+<meta name="description" content="Where Clasow has been shown, newest first.">
+<meta name="theme-color" content="#f9f9ff">
+<link rel="canonical" href="https://clasow.com/events/">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+<link rel="preload" href="../assets/nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Clasow's tokens, as on every page. This page is a list, newest first: add an event on top. */
+  @font-face {
+    font-family: "Nunito"; font-style: normal; font-weight: 400 800; font-display: swap;
+    src: url("../assets/nunito-latin.woff2") format("woff2");
+  }
+  :root {
+    color-scheme: light;
+    --surface: #f9f9ff; --lowest: #ffffff; --low: #f2f3fd;
+    --on-surface: #191c23; --on-surface-variant: #414754;
+    --primary: #005bbf; --primary-fixed: #d8e2ff; --on-primary-fixed: #001a41;
+    --outline-variant: #c1c6d6;
+    --xs: 4px; --sm: 8px; --md: 16px; --lg: 24px; --xl: 32px; --xxl: 48px;
+    --radius: 12px; --radius-sm: 8px; --column: 560px; --touch: 48px;
+    --shadow-1: 0 1px 2px rgba(25, 28, 35, .08), 0 1px 3px rgba(25, 28, 35, .06);
+    --shadow-2: 0 4px 12px rgba(25, 28, 35, .10), 0 1px 3px rgba(25, 28, 35, .06);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         font-size: 16px; line-height: 24px; color: var(--on-surface); background: var(--surface);
+         -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: var(--column); margin: 0 auto; padding: 0 var(--md); }
+  p, h1, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  a:focus-visible { outline: 3px solid var(--on-primary-fixed); outline-offset: 2px; }
+  .top { padding: var(--lg) 0 var(--xl); background: linear-gradient(180deg, var(--primary-fixed) 0%, var(--surface) 100%); }
+  .brand { display: inline-flex; align-items: center; gap: var(--sm); font-size: 20px; line-height: 28px; font-weight: 800;
+           color: var(--on-surface); text-decoration: none; }
+  .brand img { display: block; width: var(--xl); height: var(--xl); border-radius: var(--radius-sm); box-shadow: var(--shadow-1); }
+  h1 { margin-top: var(--xl); font-size: 24px; line-height: 32px; font-weight: 800; }
+  .lead { margin-top: var(--sm); color: var(--on-surface-variant); }
+  .list { display: grid; gap: var(--sm); }
+  .list a { display: block; padding: var(--md); border-radius: var(--radius); background: var(--lowest); box-shadow: var(--shadow-1);
+            color: var(--on-surface); text-decoration: none; transition: box-shadow 120ms ease; }
+  .list a:hover { box-shadow: var(--shadow-2); }
+  .list span { display: block; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--on-surface-variant); }
+  .list strong { display: block; margin-top: var(--xs); font-size: 20px; line-height: 28px; font-weight: 800; }
+  .list p { margin-top: var(--xs); font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
+  .list em { display: inline-block; margin-top: var(--sm); font-style: normal; font-size: 14px; font-weight: 700; color: var(--primary); }
+  footer { display: flex; justify-content: center; gap: var(--lg); margin-top: var(--xxl); padding: var(--lg) 0 var(--xxl);
+           border-top: 1px solid var(--outline-variant); }
+  footer a { display: inline-flex; align-items: center; min-height: var(--touch); color: var(--on-surface-variant);
+             font-size: 15px; font-weight: 700; text-decoration: none; }
+  footer a:hover { color: var(--primary); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><img src="../assets/icon-96.png" width="32" height="32" alt="">Clasow</a>
+    <h1>Events</h1>
+    <p class="lead">Where we have shown Clasow, newest first.</p>
+  </div>
+</header>
+<main class="wrap">
+  <ul class="list">
+    <li>
+      <a href="robo-expo-2026/">
+        <span>Saturday 3 October 2026 · our first event</span>
+        <strong>Robo Expo 2026</strong>
+        <p>116 visitors signed our Memory Wall.</p>
+        <em>See the wall</em>
+      </a>
+    </li>
+  </ul>
+  <footer>
+    <a href="../">Home</a>
+    <a href="../privacy/">Privacy Policy</a>
+    <a href="../delete-account/">Delete your account</a>
+  </footer>
+</main>
+</body>
+</html>
