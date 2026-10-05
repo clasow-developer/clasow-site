@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Clasow — your timetable, your attendance, your college forms</title>
-<meta name="description" content="Clasow is a student app for your class timetable, your own attendance and your college forms. In closed testing on Google Play. Sign up for early access.">
-<meta name="theme-color" content="#f9f9ff">
+<meta name="description" content="Clasow is a student app for your class timetable, your own attendance and your college forms. Early access is open: fill a one-minute form.">
+<meta name="theme-color" content="#005bbf">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Clasow">
 <meta property="og:title" content="Clasow">
@@ -22,13 +22,10 @@
 <link rel="preload" href="assets/nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add("js");</script>
 <style>
-  /* Values are Clasow's design tokens: colour, 8-point spacing, radius 12, Nunito.
-     Light only: no dark values have been derived yet.
-     One page, two arrangements: a single reading column, and from 900px two of them side by side.
-     Type: headings 24/32 and 20/28, prose 16/24, supporting text 14/20, labels 12/16.
-     24/32 is the system's largest step: the scale has no display size yet.
-     Motion: each block fades in once on the app's arrival clock, 360 ms emphasized-decelerate.
-     One thing pulses: the dot that marks where the timeline stands today. */
+  /* Values are Clasow's design tokens: colour, 8-point spacing, radius 12, Nunito. Light only.
+     Type: 24/32 and 20/28 headings, 16/24 prose, 14/20 supporting, 12/16 labels.
+     One action on this page, filling the early access form: a banner holds it from the first second.
+     Motion: blocks fade in once (360 ms, emphasized-decelerate). Ink writes itself. One dot pulses. */
   @font-face {
     font-family: "Nunito"; font-style: normal; font-weight: 400 800; font-display: swap;
     src: url("assets/nunito-latin.woff2") format("woff2");
@@ -40,61 +37,65 @@
     --primary: #005bbf; --on-primary: #ffffff; --primary-pressed: #004493;
     --primary-fixed: #d8e2ff; --on-primary-fixed: #001a41;
     --outline-variant: #c1c6d6;
-    --xxs: 2px; --xs: 4px; --sm: 8px; --md: 16px; --lg: 24px; --xl: 32px; --xxl: 48px;
+    --xxs: 2px; --xs: 4px; --sm: 8px; --md: 16px; --lg: 24px; --xl: 32px; --xxl: 48px; --xxxl: 64px;
     --radius: 12px; --radius-sm: 8px;
-    --column: 560px;  /* one reading column */
-    --wide: 1120px;   /* two reading columns */
-    --touch: 48px;    /* the smallest target a finger is given */
+    --column: 560px; --wide: 1120px; --touch: 48px;
     --arrive: 360ms cubic-bezier(.05, .7, .1, 1);
     --shadow-1: 0 1px 2px rgba(25, 28, 35, .08), 0 1px 3px rgba(25, 28, 35, .06);
     --shadow-2: 0 4px 12px rgba(25, 28, 35, .10), 0 1px 3px rgba(25, 28, 35, .06);
   }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-  body {
-    margin: 0; font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 16px; line-height: 24px; color: var(--on-surface); background: var(--surface);
-    -webkit-font-smoothing: antialiased;
-  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body { margin: 0; font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         font-size: 16px; line-height: 24px; color: var(--on-surface); background: var(--surface);
+         -webkit-font-smoothing: antialiased; }
   .wrap { max-width: var(--column); margin: 0 auto; padding: 0 var(--md); }
   p, h1, h2, ul, ol { margin: 0; }
   ul, ol { padding: 0; list-style: none; }
   a { color: var(--primary); }
-  a:focus-visible { outline: 3px solid var(--on-primary-fixed); outline-offset: 2px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--on-primary-fixed); outline-offset: 2px; }
 
-  /* Links that move you around, top and bottom: one look */
-  .nav a, .links a { display: inline-flex; align-items: center; min-height: var(--touch);
-                     color: var(--on-surface-variant); font-size: 15px; line-height: 20px; font-weight: 700; text-decoration: none; }
-  .nav a:hover, .links a:hover { color: var(--primary); }
+  /* The banner: the page's one action, on screen from the first second to the last.
+     The whole bar is the link, so the target is the bar, not only its button. */
+  .banner { position: sticky; top: 0; z-index: 10; display: block; background: var(--primary); color: var(--on-primary);
+            text-decoration: none; box-shadow: var(--shadow-2); -webkit-tap-highlight-color: transparent; }
+  .banner .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--md);
+                  min-height: 64px; padding-top: var(--sm); padding-bottom: var(--sm); }
+  .banner p { font-size: 14px; line-height: 20px; }
+  .banner b { display: block; font-size: 16px; line-height: 24px; font-weight: 800; }
+  .banner .go { flex: none; display: inline-flex; align-items: center; gap: var(--xs); padding: var(--sm) var(--md);
+                border-radius: var(--radius); background: var(--on-primary); color: var(--primary);
+                font-size: 14px; line-height: 20px; font-weight: 800; transition: background-color 120ms ease; }
+  .banner .long { display: none; }
+  .banner:hover .go { background: var(--primary-fixed); }
+  .banner:active .go { background: var(--primary-fixed); }
+  .js .banner { opacity: 0; transition: opacity var(--arrive); }
+  .js .banner.in { opacity: 1; }
 
-  /* Top: the mark, and on a wide screen the things the page holds */
   .top { padding-top: var(--lg); background: var(--primary-fixed); }
   .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--md); }
   .brand { display: flex; align-items: center; gap: var(--sm); font-size: 20px; line-height: 28px; font-weight: 800; }
   .brand img { display: block; width: var(--xl); height: var(--xl); border-radius: var(--radius-sm); box-shadow: var(--shadow-1); }
   .nav { display: none; gap: var(--lg); }
+  .nav a, .links a { display: inline-flex; align-items: center; min-height: var(--touch); color: var(--on-surface-variant);
+                     font-size: 15px; line-height: 20px; font-weight: 700; text-decoration: none; }
+  .nav a:hover, .links a:hover { color: var(--primary); }
 
-  /* Hero: where it stands, what it is, the one action, a glance of the app */
-  .hero { padding: var(--xl) 0; background: linear-gradient(180deg, var(--primary-fixed) 0%, var(--surface) 100%); }
-  .status { display: inline-flex; align-items: center; gap: var(--sm); padding: var(--xs) var(--md);
-            border-radius: 999px; background: var(--lowest);
-            font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; }
+  /* Hero */
+  .hero { padding: var(--xl) 0 var(--xxl); background: linear-gradient(180deg, var(--primary-fixed) 0%, var(--surface) 100%); }
+  .status { display: inline-flex; align-items: center; gap: var(--sm); padding: var(--xs) var(--md); border-radius: 999px;
+            background: var(--lowest); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; }
   .status::before { content: ""; width: var(--sm); height: var(--sm); border-radius: 50%; background: var(--primary); }
   h1 { margin-top: var(--md); font-size: 24px; line-height: 32px; font-weight: 800; text-wrap: balance; }
   .lead { margin-top: var(--sm); color: var(--on-surface-variant); }
-
-  .cta {
-    display: flex; align-items: center; justify-content: center; gap: var(--sm);
-    min-height: 52px; padding: var(--sm) var(--lg); border-radius: var(--radius);
-    background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-1);
-    font-size: 15px; font-weight: 700; text-decoration: none;
-    transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
-    -webkit-tap-highlight-color: transparent;
-  }
+  .cta { display: flex; align-items: center; justify-content: center; gap: var(--sm); min-height: 52px; margin-top: var(--lg);
+         padding: var(--sm) var(--lg); border-radius: var(--radius); background: var(--primary); color: var(--on-primary);
+         box-shadow: var(--shadow-1); font-size: 15px; font-weight: 700; text-decoration: none;
+         transition: background-color 120ms ease, box-shadow 120ms ease; -webkit-tap-highlight-color: transparent; }
   .cta:hover { box-shadow: var(--shadow-2); }
-  .cta:active { background: var(--primary-pressed); transform: scale(.98); box-shadow: none; }
-  .hero .cta { margin-top: var(--lg); }
-  .note { margin-top: var(--sm); font-size: 14px; line-height: 20px; color: var(--on-surface-variant); text-align: center; }
+  .cta:active { background: var(--primary-pressed); box-shadow: none; }
+  .note { margin-top: var(--sm); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px;
+          color: var(--on-surface-variant); text-align: center; }
 
   /* The drawn glance of the app */
   .glance { margin-top: var(--xl); padding: var(--md); border-radius: var(--radius); background: var(--lowest); box-shadow: var(--shadow-2); }
@@ -107,118 +108,151 @@
   .chip { padding: var(--xs) var(--sm); border-radius: 999px; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px;
           background: var(--primary-fixed); color: var(--on-primary-fixed); white-space: nowrap; }
   .chip.open { background: transparent; color: var(--on-surface-variant); border: 1px dashed var(--outline-variant); }
-  .standing { display: flex; flex-wrap: wrap; gap: 0 var(--sm);
-              margin-top: var(--sm); padding: var(--sm) var(--md); border-radius: var(--radius-sm); background: var(--low);
-              font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
+  .standing { display: flex; flex-wrap: wrap; gap: 0 var(--sm); margin-top: var(--sm); padding: var(--sm) var(--md);
+              border-radius: var(--radius-sm); background: var(--low); font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
   .standing b { color: var(--on-surface); font-weight: 700; }
   .caption { margin-top: var(--sm); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px;
              color: var(--on-surface-variant); text-align: center; }
 
-  /* Sections: a heading says what state its cards are in, once */
-  section, .pair { padding-top: var(--xxl); }
-  h2 { margin-bottom: var(--md); font-size: 20px; line-height: 28px; font-weight: 800; }
+  /* Sections */
+  section { padding-top: var(--xxxl); }
+  h2 { font-size: 20px; line-height: 28px; font-weight: 800; }
   .head { margin-bottom: var(--md); }
-  .head h2 { margin-bottom: var(--xs); }
-  .head p { font-size: 14px; line-height: 20px; color: var(--on-surface-variant); text-wrap: balance; }
-  .cards { display: grid; gap: var(--sm); }
-  .cards li { display: flex; gap: var(--md); padding: var(--md); border-radius: var(--radius); background: var(--low); }
-  .cards svg, .contact svg { flex: none; width: 24px; height: 24px; stroke: var(--primary); fill: none;
-                             stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .cards strong { display: block; font-weight: 800; }
-  .cards span { display: block; font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
+  .head p { margin-top: var(--xxs); font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
 
-  /* The answers a stranger wants last: how far along it is, how to get it, who is behind it */
-  .pair { display: grid; gap: var(--md); }
-  .panel { padding: var(--lg); border-radius: var(--radius); background: var(--low); scroll-margin-top: var(--lg); }
-  .panel.now { background: var(--primary-fixed); color: var(--on-primary-fixed); }
-  .panel h2 { margin-bottom: var(--sm); }
-  .panel p + p { margin-top: var(--md); }
-  .panel .cta { margin-top: var(--lg); }
-  .panel .fine { font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
-  .nw { white-space: nowrap; }
+  /* Tiles: an icon, a name, a few words. Two across on a phone. */
+  .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sm); }
+  .tiles li { padding: var(--md); border-radius: var(--radius); background: var(--low); }
+  .tiles svg { display: block; width: 24px; height: 24px; margin-bottom: var(--sm); stroke: var(--primary); fill: none;
+               stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .tiles strong { display: block; font-weight: 800; }
+  .tiles span { display: block; font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
+  .tiles.next li { background: var(--lowest); border: 1px dashed var(--outline-variant); }
 
-  /* The path from first code to everyone's phone. A tick has happened; a ring has not, yet.
-     Each dot sits on its date's own line, and the rail runs dot to dot without a gap.
-     These are typed by hand: when a step happens, move "done" (and "here") down one line. */
-  .steps { margin-top: var(--md); }
+  /* Featured event */
+  .featured { display: grid; gap: var(--md); padding: var(--lg); border-radius: var(--radius); background: var(--lowest);
+              box-shadow: var(--shadow-1); color: var(--on-surface); text-decoration: none; transition: box-shadow 120ms ease;
+              -webkit-tap-highlight-color: transparent; }
+  .featured:hover { box-shadow: var(--shadow-2); }
+  .kicker { display: block; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--on-surface-variant); }
+  .featured strong { display: block; margin-top: var(--xs); font-size: 20px; line-height: 28px; font-weight: 800; }
+  .featured .big { display: block; margin-top: var(--md); font-size: 24px; line-height: 32px; font-weight: 800; color: var(--primary); }
+  .featured em { display: inline-block; margin-top: var(--md); font-style: normal; font-size: 15px; line-height: 20px; font-weight: 700; color: var(--primary); }
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sm); padding: var(--sm); border-radius: var(--radius); background: var(--low); }
+  .strip li { aspect-ratio: 3 / 2; border-radius: var(--radius-sm); background: var(--lowest); box-shadow: var(--shadow-1); }
+  .strip svg { display: block; width: 100%; height: 100%; transition: opacity 240ms ease; }
+  .strip svg.out { opacity: 0; }
+  @media (hover: hover) {
+    .strip li { transition: box-shadow 200ms cubic-bezier(.2, 0, 0, 1), transform 200ms cubic-bezier(.2, 0, 0, 1); }
+    .strip li:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+    .tiles li, .person { transition: background-color 200ms ease; }
+    .tiles li:hover, .person:hover { background: var(--container); }
+  }
+
+  /* Timeline: down the page on a phone, across it on a laptop. A tick happened; a ring has not yet. */
   .steps li { position: relative; padding: 0 0 var(--md) var(--xl); }
   .steps li:last-child { padding-bottom: 0; }
-  .steps li::before { content: ""; position: absolute; left: 0; top: 0; width: var(--md); height: var(--md);
+  /* The dot is level with the step's name: a 24 px line, a 16 px dot, 4 px above it. The rail runs from
+     the bottom of one dot to the top of the next, through the gap between the steps. */
+  .steps li::before { content: ""; position: absolute; left: 0; top: var(--xs); width: var(--md); height: var(--md);
                       border-radius: 50%; border: 2px solid var(--outline-variant); background: var(--lowest); }
   .steps li.done::before { border-color: var(--primary);
                            background: var(--primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.5l2.5 2.5 4.5-5.5'/%3E%3C/svg%3E") center / 12px no-repeat; }
-  .steps li:not(:last-child)::after { content: ""; position: absolute; left: calc(var(--md) / 2 - 1px); top: var(--md); bottom: 0;
+  .steps li:not(:last-child)::after { content: ""; position: absolute; left: calc(var(--md) / 2 - 1px); top: calc(var(--md) + var(--xs)); bottom: calc(-1 * var(--xs));
                                       border-left: 2px dashed var(--outline-variant); }
-  .steps li.done:not(.here)::after { border-left: 2px solid var(--primary); }
+  .steps li.done:not(.here)::after { border-left-style: solid; border-left-color: var(--primary); }
   .steps li.here::before { animation: pulse 2s cubic-bezier(.2, 0, 0, 1) infinite; }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(0, 91, 191, .45); }
-    100% { box-shadow: 0 0 0 var(--sm) rgba(0, 91, 191, 0); }
-  }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 91, 191, .45); } 100% { box-shadow: 0 0 0 var(--sm) rgba(0, 91, 191, 0); } }
   .steps span { display: block; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--on-surface-variant); }
-  .steps p { margin-top: var(--xxs); font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
-  .steps strong { color: var(--on-surface); font-weight: 700; }
+  .steps strong { display: block; font-weight: 700; }
+  .steps li:not(.done) strong { color: var(--on-surface-variant); }
 
-  /* Writing to us: a button, not a line of text */
-  .contact { display: flex; align-items: center; gap: var(--md); margin-top: var(--lg); padding: var(--sm) var(--md);
-             border-radius: var(--radius); background: var(--lowest); box-shadow: var(--shadow-1);
-             color: var(--on-surface); font-size: 14px; line-height: 20px; font-weight: 700; text-decoration: none;
-             overflow-wrap: anywhere; transition: box-shadow 120ms ease; -webkit-tap-highlight-color: transparent; }
-  .contact:hover { box-shadow: var(--shadow-2); }
-  .contact small { display: block; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--on-surface-variant); }
+  /* Team */
+  .people { display: grid; gap: var(--sm); }
+  .person { display: grid; grid-template-columns: auto 1fr; gap: var(--md); align-items: center;
+            padding: var(--md); border-radius: var(--radius); background: var(--low); }
+  .avatar { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%;
+            background: var(--primary-fixed); color: var(--on-primary-fixed); font-size: 20px; line-height: 28px; font-weight: 800; }
+  .person strong { display: block; font-weight: 800; }
+  .person .role { display: block; font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
+  .handles { grid-column: 1 / -1; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sm); }
+  .handle { display: flex; align-items: center; gap: var(--sm); min-height: var(--touch); padding: var(--sm) var(--md);
+            border: 0; border-radius: var(--radius); background: var(--lowest); box-shadow: var(--shadow-1);
+            color: var(--on-surface); font: inherit; font-size: 14px; line-height: 20px; font-weight: 700; text-align: left;
+            text-decoration: none; cursor: pointer; transition: box-shadow 120ms ease; -webkit-tap-highlight-color: transparent; }
+  .handle:hover { box-shadow: var(--shadow-2); }
+  .handle svg { flex: none; width: 20px; height: 20px; stroke: var(--primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .handle { min-width: 0; }
+  .handle span { min-width: 0; }
+  .handle small { display: block; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--on-surface-variant);
+                  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .join { display: grid; gap: var(--md); margin-top: var(--md); padding: var(--lg); border-radius: var(--radius);
+          background: var(--primary-fixed); color: var(--on-primary-fixed); }
+  .join p { font-size: 14px; line-height: 20px; }
+  .join .cta { margin-top: 0; }
+  .fine { margin-top: var(--md); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .5px; color: var(--on-surface-variant); text-align: center; }
 
-  /* Foot: the mark again, and the two pages Google Play asks for */
   footer { display: flex; flex-direction: column; align-items: center; gap: var(--sm);
-           margin-top: var(--xxl); padding: var(--lg) 0 calc(var(--xxl) + 76px); border-top: 1px solid var(--outline-variant); }
+           margin-top: var(--xxxl); padding: var(--lg) 0 var(--xxl); border-top: 1px solid var(--outline-variant); }
   .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 var(--lg); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  /* The bar that follows you once the first button has scrolled away */
-  .bar { position: fixed; left: 0; right: 0; bottom: 0; padding: var(--sm) var(--md) calc(var(--sm) + env(safe-area-inset-bottom));
-         background: rgba(249, 249, 255, .92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-         border-top: 1px solid var(--outline-variant);
-         transform: translateY(110%); visibility: hidden; transition: transform var(--arrive), visibility 0s linear 360ms; }
-  .bar.show { transform: none; visibility: visible; transition: transform var(--arrive), visibility 0s; }
-  .bar .cta { max-width: 528px; margin: 0 auto; }
-
-  /* Arrival: each block fades in once as it enters. Without JavaScript everything is simply visible. */
   .js .reveal { opacity: 0; }
   .js .reveal.in { opacity: 1; transition: opacity var(--arrive); }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .js .reveal, .js .reveal.in { opacity: 1; transition: none; }
-    .bar, .bar.show, .cta, .contact { transition: none; }
+    .js .reveal, .js .reveal.in, .js .banner { opacity: 1; transition: none; }
+    .cta, .featured, .handle, .strip svg, .banner .go { transition: none; }
     .steps li.here::before { animation: none; box-shadow: 0 0 0 var(--xs) var(--primary-fixed); }
   }
 
-  /* Wide: the same blocks in the same order, two reading columns across */
   @media (min-width: 900px) {
     .wrap { max-width: var(--wide); padding: 0 var(--lg); }
+    .banner .wrap { justify-content: center; gap: var(--lg); }
+    .banner p { display: flex; align-items: baseline; gap: var(--sm); font-size: 16px; line-height: 24px; }
+    .banner .short { display: none; }
+    .banner .long { display: inline; }
     .nav { display: flex; }
-    .hero { padding: var(--xxl) 0; }
+    .hero { padding: var(--xxl) 0 var(--xxxl); }
     .hero .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: var(--xxl); align-items: center; }
-    .hero .cta, .panel .cta, .contact { display: inline-flex; }
-    .hero .cta, .panel .cta { padding: var(--sm) var(--xl); }
+    .hero .cta { display: inline-flex; padding: var(--sm) var(--xl); }
     .hero .note { text-align: left; }
     .glance { margin-top: 0; }
-    .cards { gap: var(--md); }
-    .cards, .pair { grid-template-columns: 1fr 1fr; }
-    .panel { padding: var(--xl); }
-    #status { grid-row: span 2; }
-    .steps li { padding-bottom: var(--lg); }
+    .tiles { grid-template-columns: repeat(4, 1fr); gap: var(--md); }
+    .tiles.next { grid-template-columns: repeat(2, 1fr); }
+    .featured { grid-template-columns: 1fr 1fr; gap: var(--xl); align-items: center; padding: var(--xl); }
+    /* The timeline turns: five steps across, the rail running left to right */
+    .steps { display: grid; grid-template-columns: repeat(5, 1fr); }
+    .steps li { padding: var(--xl) var(--md) 0 0; }
+    .steps li::before { top: 0; }
+    .steps li:last-child { padding-bottom: 0; }
+    .steps li:not(:last-child)::after { top: calc(var(--sm) - 1px); left: var(--md); right: 0; bottom: auto;
+                                        border-left: 0; border-top: 2px dashed var(--outline-variant); }
+    .steps li.done:not(.here)::after { border-top-style: solid; border-top-color: var(--primary); }
+    .people { grid-template-columns: 1fr 1fr; gap: var(--md); }
+    .join { grid-template-columns: 1fr auto; align-items: center; padding: var(--lg) var(--xl); }
+    .join .cta { padding: var(--sm) var(--xl); }
     footer { flex-direction: row; justify-content: space-between; }
   }
 </style>
 </head>
 <body>
 
+<a class="banner" id="banner" href="https://forms.gle/HinS8zDAeWJ6eshM7">
+  <div class="wrap">
+    <p><b>Early access is open</b> <span class="short">Get Clasow first</span><span class="long">Fill a 1-minute form to get Clasow first.</span></p>
+    <span class="go">Fill the form <span aria-hidden="true">→</span></span>
+  </div>
+</a>
+
 <header class="top">
   <div class="wrap">
     <div class="brand"><img src="assets/icon-96.png" width="32" height="32" alt="">Clasow</div>
     <nav class="nav" aria-label="On this page">
-      <a href="#app">What it does</a>
-      <a href="#next">What’s next</a>
+      <a href="#app">The app</a>
+      <a href="#expo">Robo Expo 2026</a>
       <a href="#status">Where it is now</a>
-      <a href="#who">Who we are</a>
+      <a href="#who">Team</a>
     </nav>
   </div>
 </header>
@@ -229,9 +263,9 @@
       <div>
         <p class="status reveal">In closed testing on Google Play</p>
         <h1 class="reveal">Your timetable, and the attendance you actually have.</h1>
-        <p class="lead reveal">Your real class schedule, your own attendance and your college forms, in one place.</p>
-        <a class="cta reveal" id="first-cta" href="https://forms.gle/HinS8zDAeWJ6eshM7">Get early access</a>
-        <p class="note reveal">About a minute. Feedback goes in the same form.</p>
+        <p class="lead reveal">Timetable, attendance and college forms. One app.</p>
+        <a class="cta reveal" href="https://forms.gle/HinS8zDAeWJ6eshM7">Fill the early access form</a>
+        <p class="note reveal">1 minute · Google Form</p>
       </div>
       <div>
         <div class="glance reveal" role="img" aria-label="Illustration of the app: today's three classes, two marked present and one not yet marked, and a note that three more classes can be missed in Signals and Systems.">
@@ -241,80 +275,115 @@
           <div class="row"><time>11:15</time><div><strong>Microprocessors</strong><small>Lab 2</small></div><span class="chip open">Not marked</span></div>
           <p class="standing"><b>Signals and Systems</b><span>you can still miss 3 classes</span></p>
         </div>
-        <p class="caption reveal">An illustration of the app, not a screenshot.</p>
+        <p class="caption reveal">Illustration</p>
       </div>
     </div>
   </div>
 
   <div class="wrap">
     <section id="app">
-      <h2 class="reveal">In the app today</h2>
-      <ul class="cards">
+      <div class="head reveal"><h2>In the app</h2></div>
+      <ul class="tiles">
         <li class="reveal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-          <div><strong>Your real timetable</strong><span>Your branch, section and week, as it is actually taught. Edit it when your classes change.</span></div>
+          <strong>Timetable</strong><span>Your real class schedule</span>
         </li>
         <li class="reveal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>
-          <div><strong>Attendance you mark yourself</strong><span>Mark each class present or absent. See where each subject stands and how many classes you can still miss.</span></div>
+          <strong>Attendance</strong><span>See how many you can miss</span>
         </li>
         <li class="reveal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4l2-2zM10 21h4"/></svg>
-          <div><strong>Reminders that fit your day</strong><span>A nudge to record your classes, at a moment that suits your schedule.</span></div>
+          <strong>Reminders</strong><span>At the right moment</span>
         </li>
         <li class="reveal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg>
-          <div><strong>College forms, filled for you</strong><span>Leave, bonafide, bank challan and semester registration forms for PMEC, filled from details you enter once.</span></div>
+          <strong>College forms</strong><span>Filled for you</span>
         </li>
       </ul>
     </section>
 
     <section id="next">
-      <div class="head reveal">
-        <h2>What’s next</h2>
-        <p>Working prototypes, shown at Robo Expo 2026. Not in the app yet.</p>
-      </div>
-      <ul class="cards">
+      <div class="head reveal"><h2>Coming next</h2><p>Prototypes, shown at Robo Expo 2026</p></div>
+      <ul class="tiles next">
         <li class="reveal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20c3-1 4-6 6-6s1 4 3 4 2-3 4-3 2 2 3 2M14 4l4 4-7 7-4 1 1-4z"/></svg>
-          <div><strong>Forms signed on the phone</strong><span>Send a form to your teacher and get it back signed, with a tracking code on the paper.</span></div>
+          <strong>Signed forms</strong><span>Your teacher signs on the phone</span>
         </li>
         <li class="reveal">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11l2 2 3-4"/></svg>
-          <div><strong>A side for teachers</strong><span>A teacher takes the roll on their own device, and it reaches your phone.</span></div>
+          <strong>Teacher's side</strong><span>Roll call that reaches you</span>
         </li>
       </ul>
     </section>
 
-    <div class="pair">
-      <section class="panel reveal" id="status">
-        <h2>Where it is now</h2>
-        <ol class="steps">
-          <li class="done"><span>June 2026</span><p><strong>First code.</strong> Two students, 370+ commits since.</p></li>
-          <li class="done"><span>19 Sept</span><p><strong>Closed testing opens on Google Play,</strong> with students at PMEC Berhampur.</p></li>
-          <li class="done here" aria-current="step"><span>2 Oct</span><p><strong>Ninth version in two weeks,</strong> now with college forms.</p></li>
-          <li><span>4 Oct</span><p><strong>The 14-day closed test completes.</strong> Then we apply to Google for public release.</p></li>
-          <li><span>Late Oct 2026 · planned</span><p><strong>Open to everyone,</strong> after Google’s review. On Google Play only, for now.</p></li>
-        </ol>
-      </section>
-      <section class="panel now reveal" aria-label="Early access">
-        <p>Sign up and we will write to you when you can install it.</p>
-        <a class="cta" id="second-cta" href="https://forms.gle/HinS8zDAeWJ6eshM7">Get early access</a>
-      </section>
-      <section class="panel reveal" id="who">
-        <h2>Who we are</h2>
-        <p>Clasow is built by Piyus Patra and Manish Choudhury, engineering students who needed it themselves.</p>
-        <p class="fine">It is published and operated by the duo as <span class="nw">co-developers</span>, and is not run by, or on behalf of, any college or university.</p>
-        <a class="contact" href="mailto:clasow.developer@gmail.com">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
-          <span><small>Questions? Write to us</small>clasow.developer@gmail.com</span>
-        </a>
-      </section>
-    </div>
+    <section id="expo">
+      <a class="featured reveal" href="events/robo-expo-2026/">
+        <div>
+          <span class="kicker">Our first event · 3 Oct 2026</span>
+          <strong>Robo Expo 2026</strong>
+          <span class="big">116 signatures</span>
+          <em>See the Memory Wall →</em>
+        </div>
+        <ul class="strip" id="strip" aria-hidden="true"></ul>
+      </a>
+    </section>
+
+    <section id="status">
+      <div class="head reveal"><h2>Where it is now</h2></div>
+      <ol class="steps reveal">
+        <li class="done"><strong>First code</strong><span>June 2026</span></li>
+        <li class="done"><strong>Closed testing</strong><span>19 Sept</span></li>
+        <li class="done"><strong>9th version</strong><span>2 Oct</span></li>
+        <li class="done here" aria-current="step"><strong>Test complete</strong><span>4 Oct</span></li>
+        <li><strong>Open to everyone</strong><span>After Dussehra · planned</span></li>
+      </ol>
+    </section>
+
+    <section id="who">
+      <div class="head reveal"><h2>The team</h2></div>
+      <ul class="people">
+        <li class="person reveal">
+          <div class="avatar" aria-hidden="true">PP</div>
+          <div><strong>Piyus Patra</strong><span class="role">Co-developer</span></div>
+          <div class="handles">
+            <a class="handle" href="https://www.linkedin.com/in/am-piyus" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.5c0-1.7 1.2-3 2.75-3S17 11.5 17 13.2V17"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <button class="handle copy" type="button" data-copy="am_piyus" aria-label="WhatsApp username @am_piyus. Copy it">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7z"/><path d="M9.5 9.5c.3 2 1.8 3.7 3.9 4.6l1.1-1.1 1.8.8-.4 1.6c-3.5.2-7-3.2-6.9-6.8l1.6-.4.8 1.8z"/></svg>
+              <span>WhatsApp<small data-label="@am_piyus">@am_piyus</small></span>
+            </button>
+          </div>
+        </li>
+        <li class="person reveal">
+          <div class="avatar" aria-hidden="true">MC</div>
+          <div><strong>Manish Choudhury</strong><span class="role">Co-developer</span></div>
+          <div class="handles">
+            <a class="handle" href="https://www.linkedin.com/in/manish-choudhury-771535336/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.5c0-1.7 1.2-3 2.75-3S17 11.5 17 13.2V17"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <button class="handle copy" type="button" data-copy="_manish_choudhury" aria-label="WhatsApp username @_manish_choudhury. Copy it">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.7z"/><path d="M9.5 9.5c.3 2 1.8 3.7 3.9 4.6l1.1-1.1 1.8.8-.4 1.6c-3.5.2-7-3.2-6.9-6.8l1.6-.4.8 1.8z"/></svg>
+              <span>WhatsApp<small data-label="@_manish_choudhury">@_manish_choudhury</small></span>
+            </button>
+          </div>
+        </li>
+      </ul>
+      <div class="join reveal">
+        <div><h2>Build it with us</h2><p>Design, code or test Clasow with us.</p></div>
+        <a class="cta" href="mailto:clasow.developer@gmail.com?subject=I%20want%20to%20build%20Clasow%20with%20you">Email us</a>
+      </div>
+      <p class="fine reveal">Independent · not run by any college</p>
+      <p class="sr-only" id="copied" aria-live="polite"></p>
+    </section>
 
     <footer>
       <div class="brand"><img src="assets/icon-96.png" width="32" height="32" alt="">Clasow</div>
-      <nav class="links" aria-label="Privacy and account">
+      <nav class="links" aria-label="More">
+        <a href="events/">Events</a>
         <a href="privacy/">Privacy Policy</a>
         <a href="delete-account/">Delete your account</a>
       </nav>
@@ -322,40 +391,82 @@
   </div>
 </main>
 
-<div class="bar" id="bar" aria-hidden="true">
-  <a class="cta" tabindex="-1" href="https://forms.gle/HinS8zDAeWJ6eshM7">Get early access</a>
-</div>
-
+<script src="assets/wall.js"></script>
 <script>
 (function () {
-  if (!("IntersectionObserver" in window)) {
-    document.documentElement.classList.remove("js");
-    return;
-  }
-  // Each block arrives once, with a short stagger between neighbours.
-  var seen = new IntersectionObserver(function (entries) {
-    var delay = 0;
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      e.target.style.transitionDelay = delay + "ms";
-      delay += 60;
-      e.target.classList.add("in");
-      seen.unobserve(e.target);
-    });
-  }, { rootMargin: "0px 0px -8% 0px" });
-  document.querySelectorAll(".reveal").forEach(function (el) { seen.observe(el); });
+  var io = "IntersectionObserver" in window;
 
-  // The bottom bar shows only while neither page button is on screen.
-  var bar = document.getElementById("bar"), link = bar.querySelector("a"), visible = {};
-  var watch = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
-    var show = !visible["first-cta"] && !visible["second-cta"];
-    bar.classList.toggle("show", show);
-    bar.setAttribute("aria-hidden", show ? "false" : "true");
-    link.tabIndex = show ? 0 : -1;
+  // The banner arrives first, then each block fades in once as it enters.
+  var banner = document.getElementById("banner");
+  requestAnimationFrame(function () { setTimeout(function () { banner.classList.add("in"); }, 120); });
+  if (!io) { document.documentElement.classList.remove("js"); }
+  else {
+    var seen = new IntersectionObserver(function (entries) {
+      var delay = 0;
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.style.transitionDelay = delay + "ms";
+        delay += 60;
+        e.target.classList.add("in");
+        seen.unobserve(e.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    document.querySelectorAll(".reveal").forEach(function (el) { seen.observe(el); });
+  }
+
+  // WhatsApp has no link that opens a username, so the button copies it.
+  var said = document.getElementById("copied");
+  document.querySelectorAll(".copy").forEach(function (btn) {
+    var small = btn.querySelector("small");
+    btn.addEventListener("click", function () {
+      var name = btn.getAttribute("data-copy");
+      if (!(navigator.clipboard && window.isSecureContext)) return;
+      navigator.clipboard.writeText(name).then(function () {
+        small.textContent = "Copied";
+        said.textContent = "Copied " + name + ". Search it in WhatsApp.";
+        clearTimeout(btn._t);
+        btn._t = setTimeout(function () { small.textContent = small.getAttribute("data-label"); }, 2000);
+      }, function () {});
+    });
   });
-  watch.observe(document.getElementById("first-cta"));
-  watch.observe(document.getElementById("second-cta"));
+
+  // The featured event: six signatures, met at random, write themselves; then a random tile fades and
+  // another signature is written in its place, while the card is on screen.
+  var strip = document.getElementById("strip"), started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    ClasowWall.load("events/robo-expo-2026/wall.json").then(function (data) {
+      var wall = data.wall, order = ClasowWall.shuffled(wall.length), at = 0, slots = [];
+      for (var k = 0; k < 6; k++) {
+        var li = document.createElement("li"), svg = ClasowWall.tile(wall[order[at++]]);
+        li.appendChild(svg); strip.appendChild(li); ClasowWall.blank(svg); slots.push(li);
+      }
+      slots.forEach(function (li, k) {
+        setTimeout(function () { ClasowWall.write(li.firstChild); }, k * 220);
+        li.addEventListener("mouseenter", function () {
+          var svg = li.firstChild;
+          if (svg && !svg.classList.contains("out")) ClasowWall.resign(svg, 1400, { nib: true });
+        });
+      });
+      if (!io) return;
+      var onScreen = true, slot = 0;
+      new IntersectionObserver(function (e) { onScreen = e[0].isIntersecting; }).observe(strip);
+      setInterval(function () {
+        if (!onScreen || document.hidden) return;
+        var li = slots[slot], old = li.firstChild, svg = ClasowWall.tile(wall[order[at++ % wall.length]]);
+        slot = Math.floor(Math.random() * slots.length);
+        old.classList.add("out");
+        setTimeout(function () { li.replaceChild(svg, old); ClasowWall.write(svg); }, 260);
+      }, 2400);
+    }).catch(function () { strip.remove(); });
+  }
+  if (io) {
+    var near = new IntersectionObserver(function (e) {
+      if (e[0].isIntersecting) { near.disconnect(); start(); }
+    }, { rootMargin: "0px 0px -10% 0px" });
+    near.observe(strip);
+  } else start();
 })();
 </script>
 
